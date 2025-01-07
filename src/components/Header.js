@@ -8,7 +8,7 @@ const Header = () => {
                 <a href="/signup">회원가입</a>
                 <a href="/find-id">아이디 찾기</a>
                 <a href="/find-password">비밀번호 찾기</a>
-                <a href="/login">로그인</a>
+                <a href="/login" className='text-blue-600 font-bold'>로그인</a>
             </nav>
         </header>
     );
