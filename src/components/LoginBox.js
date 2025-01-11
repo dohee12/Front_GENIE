@@ -5,7 +5,7 @@ const LoginBox = () => {
     return (
         <div className="flex justify-center items-center p-8 bg-white shadow-md rounded-lg">
             <div className="w-1/2 p-4">
-                <h2 className="text-2xl font-bold mb-6">로그인</h2>
+                <h2 className="text-2xl font-bold mb-6 text-blue-500">로그인</h2>
                 <form className="space-y-4">
                     <input 
                         type="text"
