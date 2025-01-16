@@ -8,6 +8,7 @@ const SignupBox = () => {
     const [isPasswordValid, setIsPasswordValid] = useState(null);
     const [email, setEmail] = useState('');
     const [emailDomain, setEmailDomain] = useState('');
+    const [isEmailValid, setIsEmailValid] = useState(null);
     const [phone, setPhone] = useState('');
     const [isPhoneValid, setIsPhoneValid] = useState(false);
 
@@ -31,6 +32,15 @@ const SignupBox = () => {
         }
     }, [password, confirmPassword]);
 
+    useEffect(() => {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (email && emailDomain) {
+            setIsEmailValid(emailRegex.test(`${email}@${emailDomain}`));
+        } else {
+            setIsEmailValid(null);
+        }
+    }, [email, emailDomain]);
+
     const handlePhoneVerification = () => {
         if (phone) {
             fetch(`/api/send-verification-code?phone=${phone}`)
@@ -39,11 +49,13 @@ const SignupBox = () => {
         }
     };
 
+    const isFormValid = isUsernameValid && isPasswordValid && isEmailValid && isPhoneValid;
+
     return (
         <div className="flex justify-center items-center p-8 bg-white shadow-md rounded-lg">
             <div className="w-full p-4">
-                <h2 className="text-2xl font-bold mb-6 text-blue-500">회원가입</h2>
-                <form className="space-y-4">
+                <h2 className="text-3xl font-bold mb-6 text-center">정보 입력</h2>
+                <form className="items-center w-1/2 mx-auto ">
                     <div>
                         <h1>아이디</h1>
                         <div className="flex space-x-2">
@@ -52,12 +64,12 @@ const SignupBox = () => {
                                 placeholder="아이디 (영문 소문자와 숫자, 4~12자)"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
-                                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-3 mb-3"
                             />
                             <button
                                 type="button"
                                 disabled={!username}
-                                className={`py-2 px-4 ${username ? 'bg-blue-500' : 'bg-gray-300'} text-white rounded-md`}
+                                className={`w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-3 mb-3 ${username ? 'bg-blue-500' : 'bg-gray-300'} text-white`}
                             >
                                 중복확인
                             </button>
@@ -71,28 +83,28 @@ const SignupBox = () => {
                             placeholder="비밀번호 (영문 대소문자, 숫자, 특수문자 중 2가지 이상 조합, 8~20자)"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-3"
                         />
                         <input 
                             type="password"
                             placeholder="비밀번호 확인"
                             value={confirmPassword}
                             onChange={(e) => setConfirmPassword(e.target.value)}
-                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-3"
                         />
-                        {isPasswordValid === null ? null : isPasswordValid ? <p className="text-green-500">사용 가능한 비밀번호입니다.</p> : <p className="text-red-500">비밀번호가 일치하지 않거나 유효하지 않습니다.</p>}
+                        {isPasswordValid === null ? null : isPasswordValid ? <p className="text-green-500">사용 가능한 비밀번호입니다.</p> : <p className="text-red-500">영문 대소문자, 숫자, 특수기호(@,$,!,%,*,?,&)중 2가지 이상을 조합하여 8~20자로 입력해주세요</p>}
                     </div>
                     <div>
                         <h1>이메일</h1>
-                        <div className="flex space-x-2">
+                        <div className="flex space-x-2 items-center">
                             <input 
                                 type="email"
                                 placeholder="이메일"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3 mt-3"
                             />
-                            <span>@</span>
+                            <span className="mx-2">@</span>
                             <select 
                                 value={emailDomain}
                                 onChange={(e) => setEmailDomain(e.target.value)}
@@ -104,6 +116,8 @@ const SignupBox = () => {
                                 <option value="daum.net">daum.net</option>
                             </select>
                         </div>
+                        {isEmailValid === null ? null : isEmailValid ? <p className="text-green-500">사용 가능한 이메일입니다.</p> : <p className="text-red-500">유효하지 않은 이메일입니다.</p>}
+                        <p className='text-sm mb-5 text-gray-500'>더 안전하게 계정을 보호하려면 가입 후 [내정보 > 회원정보 수정]에서 이메일 인증을 진행해주세요.</p>
                     </div>
                     <div>
                         <h1>휴대폰 번호</h1>
@@ -113,19 +127,26 @@ const SignupBox = () => {
                                 placeholder="핸드폰 번호"
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
-                                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3 mt-3"
                             />
                             <button
                                 type="button"
                                 disabled={!phone}
                                 onClick={handlePhoneVerification}
-                                className={`py-2 px-4 ${phone ? 'bg-blue-500' : 'bg-gray-300'} text-white rounded-md`}
+                                className={`w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3 mt-3 ${phone ? 'bg-blue-500' : 'bg-gray-300'} text-white`}
                             >
                                 인증번호 받기
                             </button>
                         </div>
                         {isPhoneValid && <p className="text-green-500">인증번호가 발송되었습니다.</p>}
                     </div>
+                    <button
+                        type="submit"
+                        disabled={!isFormValid}
+                        className={`w-full px-4 py-2 ${isFormValid ? 'bg-blue-500' : 'bg-gray-300'} text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-6`}
+                    >
+                        가입하기
+                    </button>
                 </form>
             </div>
         </div>
