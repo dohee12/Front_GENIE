@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import Header from './components/Header';
 import LoginBox from './components/LoginBox';
 import SignupBox from './components/SignupBox';
@@ -13,6 +13,7 @@ function App() {
       <Header/>
       <main>
         <Routes>
+          <Route path='/' element={<Navigate replace to="/login"/>} />
           <Route path="/find-password" element={<FindPwBox />} />
           <Route path='/find-id' element={<FindIdBox />} />
           <Route path="/signup" element={<SignupBox />} />
