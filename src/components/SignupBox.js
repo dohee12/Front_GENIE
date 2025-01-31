@@ -1,15 +1,8 @@
 import React, { useState, useEffect } from 'react';
 
 const SignupBox = () => {
-    const [username, setUsername] = useState('');
-    const [isUsernameValid, setIsUsernameValid] = useState(null);
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
-    const [isPasswordValid, setIsPasswordValid] = useState(null);
-    const [email, setEmail] = useState('');
-    const [emailDomain, setEmailDomain] = useState('');
-    const [isEmailValid, setIsEmailValid] = useState(null);
-    const [phone, setPhone] = useState('');
+    const [username, setUsername, password, setPassword, confirmPassword, setConfirmPassword, email, setEmail, emailDomain, setEmailDomain, phone, setPhone] = useState('');
+    const [isUsernameValid, setIsUsernameValid, isPasswordValid, setIsPasswordValid, isEmailValid, setIsEmailValid] = useState(null);
     const [isPhoneValid, setIsPhoneValid] = useState(false);
 
     useEffect(() => {
@@ -25,8 +18,8 @@ const SignupBox = () => {
 
     useEffect(() => {
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,20}$/;
-        if (password && confirmPassword) {
-            setIsPasswordValid(passwordRegex.test(password) && password === confirmPassword);
+        if (passwordRegex.test(password) && password === confirmPassword) {
+            setIsPasswordValid(true);
         } else {
             setIsPasswordValid(null);
         }
@@ -74,7 +67,7 @@ const SignupBox = () => {
                                 중복확인
                             </button>
                         </div>
-                        {isUsernameValid === null ? null : isUsernameValid ? <p className="text-green-500">사용 가능한 아이디입니다.</p> : <p className="text-red-500">이미 사용 중인 아이디입니다.</p>}
+                        {username === isUsernameValid ? <p className="text-green-500">사용 가능한 아이디입니다.</p> : <p className="text-red-500">이미 사용 중인 아이디입니다.</p>}
                     </div>
                     <div>
                         <h1>비밀번호</h1>
@@ -92,7 +85,7 @@ const SignupBox = () => {
                             onChange={(e) => setConfirmPassword(e.target.value)}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
                         />
-                        {isPasswordValid === null ? null : isPasswordValid ? <p className="text-green-500">사용 가능한 비밀번호입니다.</p> : <p className="text-red-500">영문 대소문자, 숫자, 특수기호(@,$,!,%,*,?,&)중 2가지 이상을 조합하여 8~20자로 입력해주세요</p>}
+                        {password === confirmPassword === isPasswordValid ?  <p className="text-green-500">사용 가능한 비밀번호입니다.</p> : <p className="text-red-500">영문 대소문자, 숫자, 특수기호(@,$,!,%,*,?,&)중 2가지 이상을 조합하여 8~20자로 입력해주세요</p>}
                     </div>
                     <div>
                         <h1>이메일</h1>
