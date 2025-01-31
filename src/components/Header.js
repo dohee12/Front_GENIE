@@ -3,9 +3,9 @@ import Logo from "./../img/genieLogo.png";
 
 const Header = () => {
     return (
-        <header className="flex items-center justify-between h-16 px-56 py-3 border-b bg-white">
+        <header className="flex items-center justify-between h-16 px-64 py-3 border-b bg-white">
             <a href="/login">
-                <img src={Logo} alt="지니뮤직 로고" className="w-28"/>
+                <img src={Logo} alt="지니뮤직 로고" className="w-20"/>
             </a>
             <nav className="flex space-x-8 text-gray-600 text-sm">
                 <a href="/signup" className="hover:text-blue-600">회원가입</a>
