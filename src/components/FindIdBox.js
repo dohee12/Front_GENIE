@@ -1,14 +1,8 @@
 import React, { useState } from 'react';
 
 const FindIdBox = () => {
-    const [username, setUsername] = useState('');
-    const [birthdate, setBirthdate] = useState('');
-    const [phone, setPhone] = useState('');
-    const [isPhoneValid, setIsPhoneValid] = useState(false);
-    const [verificationCode, setVerificationCode] = useState('');
-    const [inputCode, setInputCode] = useState('');
-    const [isVerified, setIsVerified] = useState(false);
-    const [foundId, setFoundId] = useState('');
+    const [username, setUsername, birthdate, setBirthdate, phone, setPhone, verificationCode, setVerificationCode, inputCode, setInputCode, foundId, setFoundId] = useState('')
+    const [isPhoneValid, setIsPhoneValid, isVerified, setIsVerified] = useState(false);
 
     const handlePhoneVerification = () => {
         if (username && phone && birthdate) {
