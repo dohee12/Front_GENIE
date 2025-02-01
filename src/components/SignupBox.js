@@ -14,7 +14,7 @@ const SignupBox = () => {
         } else {
             setIsUsernameValid(null);
         }
-    }, [username]);
+    });
 
     useEffect(() => {
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,20}$/;
@@ -23,7 +23,7 @@ const SignupBox = () => {
         } else {
             setIsPasswordValid(null);
         }
-    }, [password, confirmPassword]);
+    });
 
     useEffect(() => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -32,7 +32,7 @@ const SignupBox = () => {
         } else {
             setIsEmailValid(null);
         }
-    }, [email, emailDomain]);
+    });
 
     const handlePhoneVerification = () => {
         if (phone) {
