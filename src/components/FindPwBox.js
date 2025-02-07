@@ -1,8 +1,18 @@
 import React, { useState } from 'react';
 
 const FindPwBox = () => {
-    const [username, setUsername, birthdate, setBirthdate, phone, setPhone, verificationCode, setVerificationCode, inputCode, setInputCode, resetLink, setResetLink] = useState('');
-    const [isPhoneValid, setIsPhoneValid, isVerified, setIsVerified] = useState(false);
+    const [pw, setPw] = useState({
+        username: '',
+        brithdate: '',
+        phone: '',
+        verificationCode: '',
+        inputCode: '',
+        resetLink: ''
+    })
+    const [valid, setValid] = useState({
+        isPhoneInputValid: false,
+        isVerified: false
+    })
 
     const handlePhoneVerification = () => {
         if (username && phone && birthdate) {
