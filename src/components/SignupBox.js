@@ -1,10 +1,26 @@
 import React, { useState, useEffect } from 'react';
 
 const SignupBox = () => {
-    const [username, setUsername, password, setPassword, confirmPassword, setConfirmPassword, email, setEmail, emailDomain, setEmailDomain, phone, setPhone] = useState('');
-    const [isUsernameValid, setIsUsernameValid, isPasswordValid, setIsPasswordValid, isEmailValid, setIsEmailValid] = useState(null);
-    const [isPhoneValid, setIsPhoneValid] = useState(false);
-
+    const [username, setUsername] = useState({
+        username: '',
+        isUsernameValid: null
+    })
+    const [password, setPassword] = useState({
+        passssword: '',
+        confirmPassword: '',
+        isPasswordValid: null
+    })
+    const [email, setEmail] = useState({
+        email: '',
+        emailDomain: '',
+        isEmailValid: null
+    })
+    const [phone, setPhone] = useState({
+        phone: '',
+        isPhoneValid: false
+    })
+    
+    
     useEffect(() => {
         const usernameRegex = /^[a-z][a-z0-9]{3,11}$/;
         if (username && usernameRegex.test(username)) {
