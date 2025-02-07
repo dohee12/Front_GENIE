@@ -1,64 +1,59 @@
 import React, { useState, useEffect } from 'react';
 
 const SignupBox = () => {
-    const [username, setUsername] = useState({
+    const [signup, setSignup] = useState({
         username: '',
-        isUsernameValid: null
-    })
-    const [password, setPassword] = useState({
-        passssword: '',
+        password: '',
         confirmPassword: '',
-        isPasswordValid: null
-    })
-    const [email, setEmail] = useState({
         email: '',
         emailDomain: '',
-        isEmailValid: null
-    })
-    const [phone, setPhone] = useState({
-        phone: '',
-        isPhoneValid: false
-    })
-    
-    
+        phone: ''
+    });
+    const [signupValid, setSignupValid] = useState({
+        isUsernameValid: null,
+        isPasswordValid: null,
+        isEmailValid: null,
+        isPhoneValid: null
+    });
+
     useEffect(() => {
         const usernameRegex = /^[a-z][a-z0-9]{3,11}$/;
-        if (username && usernameRegex.test(username)) {
-            fetch(`/api/check-username?username=${username}`)
+        if (signup.username && usernameRegex.test(signup.username)) {
+            fetch(`/api/check-username?username=${signup.username}`)
                 .then(response => response.json())
-                .then(data => setIsUsernameValid(data.isValid));
+                .then(data => setSignupValid(prevState => ({ ...prevState, isUsernameValid: data.isValid })));
         } else {
-            setIsUsernameValid(null);
+            setSignupValid(prevState => ({ ...prevState, isUsernameValid: null }));
         }
-    });
+    }, [signup.username]);
 
     useEffect(() => {
         const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,20}$/;
-        if (passwordRegex.test(password) && password === confirmPassword) {
-            setIsPasswordValid(true);
+        if (passwordRegex.test(signup.password) && signup.password === signup.confirmPassword) {
+            setSignupValid(prevState => ({ ...prevState, isPasswordValid: true }));
         } else {
-            setIsPasswordValid(null);
+            setSignupValid(prevState => ({ ...prevState, isPasswordValid: null }));
         }
-    });
+    }, [signup.password, signup.confirmPassword]);
 
     useEffect(() => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (email && emailDomain) {
-            setIsEmailValid(emailRegex.test(`${email}@${emailDomain}`));
+        if (signup.email && signup.emailDomain) {
+            setSignupValid(prevState => ({ ...prevState, isEmailValid: emailRegex.test(`${signup.email}@${signup.emailDomain}`) }));
         } else {
-            setIsEmailValid(null);
+            setSignupValid(prevState => ({ ...prevState, isEmailValid: null }));
         }
-    });
+    }, [signup.email, signup.emailDomain]);
 
     const handlePhoneVerification = () => {
-        if (phone) {
-            fetch(`/api/send-verification-code?phone=${phone}`)
+        if (signup.phone) {
+            fetch(`/api/send-verification-code?phone=${signup.phone}`)
                 .then(response => response.json())
-                .then(data => setIsPhoneValid(data.isSent));
+                .then(data => setSignupValid(prevState => ({ ...prevState, isPhoneValid: data.isSent })));
         }
     };
 
-    const isFormValid = isUsernameValid && isPasswordValid && isEmailValid && isPhoneValid;
+    const isFormValid = signupValid.isUsernameValid && signupValid.isPasswordValid && signupValid.isEmailValid && signupValid.isPhoneValid;
 
     return (
         <div className="flex justify-center items-center p-8 bg-white shadow-md rounded-lg">
@@ -71,37 +66,37 @@ const SignupBox = () => {
                             <input 
                                 type="text"
                                 placeholder="아이디 (영문 소문자와 숫자, 4~12자)"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                value={signup.username}
+                                onChange={(e) => setSignup({ ...signup, username: e.target.value })}
                                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-3 mb-3"
                             />
                             <button
                                 type="button"
-                                disabled={!username}
-                                className={`w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-3 mb-3 ${username ? 'bg-blue-500' : 'bg-gray-300'} text-white`}
+                                disabled={!signup.username}
+                                className={`w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-3 mb-3 ${signup.username ? 'bg-blue-500' : 'bg-gray-300'} text-white`}
                             >
                                 중복확인
                             </button>
                         </div>
-                        {username === isUsernameValid ? <p className="text-green-500">사용 가능한 아이디입니다.</p> : <p className="text-red-500">이미 사용 중인 아이디입니다.</p>}
+                        {signup.username === '' ? <p className="text-gray-500">4~12자/영문 소문자(숫자 조합 가능)</p> : (signupValid.isUsernameValid === null ? null : signupValid.isUsernameValid ? <p className="text-green-500">사용 가능한 아이디입니다.</p> : <p className="text-red-500">이미 사용 중인 아이디입니다.</p>)}
                     </div>
                     <div>
                         <h1>비밀번호</h1>
                         <input 
                             type="password"
                             placeholder="비밀번호 (영문 대소문자, 숫자, 특수문자 중 2가지 이상 조합, 8~20자)"
-                            value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            value={signup.password}
+                            onChange={(e) => setSignup({ ...signup, password: e.target.value })}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-3 mb-3"
                         />
                         <input 
                             type="password"
                             placeholder="비밀번호 확인"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            value={signup.confirmPassword}
+                            onChange={(e) => setSignup({ ...signup, confirmPassword: e.target.value })}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
                         />
-                        {password === confirmPassword === isPasswordValid ?  <p className="text-green-500">사용 가능한 비밀번호입니다.</p> : <p className="text-red-500">영문 대소문자, 숫자, 특수기호(@,$,!,%,*,?,&)중 2가지 이상을 조합하여 8~20자로 입력해주세요</p>}
+                        {signup.password === '' && signup.confirmPassword === '' ? <p className="text-gray-500">8~20자/영문 대문자, 소문자, 숫자, 특수문자 중 2가지 이상 조합</p> : (signup.password === signup.confirmPassword && signupValid.isPasswordValid ? <p className="text-green-500">사용 가능한 비밀번호입니다.</p> : <p className="text-red-500">영문 대소문자, 숫자, 특수기호(@,$,!,%,*,?,&)중 2가지 이상을 조합하여 8~20자로 입력해주세요</p>)}
                     </div>
                     <div>
                         <h1>이메일</h1>
@@ -109,14 +104,14 @@ const SignupBox = () => {
                             <input 
                                 type="email"
                                 placeholder="이메일"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                value={signup.email}
+                                onChange={(e) => setSignup({ ...signup, email: e.target.value })}
                                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3 mt-3"
                             />
                             <span className="mx-2">@</span>
                             <select 
-                                value={emailDomain}
-                                onChange={(e) => setEmailDomain(e.target.value)}
+                                value={signup.emailDomain}
+                                onChange={(e) => setSignup({ ...signup, emailDomain: e.target.value })}
                                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                                 <option value="">선택</option>
@@ -125,7 +120,7 @@ const SignupBox = () => {
                                 <option value="daum.net">daum.net</option>
                             </select>
                         </div>
-                        {isEmailValid === null ? null : isEmailValid ? <p className="text-green-500">사용 가능한 이메일입니다.</p> : <p className="text-red-500">유효하지 않은 이메일입니다.</p>}
+                        {signupValid.isEmailValid === null ? null : signupValid.isEmailValid ? <p className="text-green-500">사용 가능한 이메일입니다.</p> : <p className="text-red-500">유효하지 않은 이메일입니다.</p>}
                         <p className='text-sm mb-5 text-gray-500'>더 안전하게 계정을 보호하려면 가입 후 [내정보 > 회원정보 수정]에서 이메일 인증을 진행해주세요.</p>
                     </div>
                     <div>
@@ -134,20 +129,20 @@ const SignupBox = () => {
                             <input 
                                 type="text"
                                 placeholder="핸드폰 번호"
-                                value={phone}
-                                onChange={(e) => setPhone(e.target.value)}
+                                value={signup.phone}
+                                onChange={(e) => setSignup({ ...signup, phone: e.target.value })}
                                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3 mt-3"
                             />
                             <button
                                 type="button"
-                                disabled={!phone}
+                                disabled={!signup.phone}
                                 onClick={handlePhoneVerification}
-                                className={`w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3 mt-3 ${phone ? 'bg-blue-500' : 'bg-gray-300'} text-white`}
+                                className={`w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3 mt-3 ${signup.phone ? 'bg-blue-500' : 'bg-gray-300'} text-white`}
                             >
                                 인증번호 받기
                             </button>
                         </div>
-                        {isPhoneValid && <p className="text-green-500">인증번호가 발송되었습니다.</p>}
+                        {signupValid.isPhoneValid && <p className="text-green-500">인증번호가 발송되었습니다.</p>}
                     </div>
                     <button
                         type="submit"

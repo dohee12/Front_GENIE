@@ -15,33 +15,33 @@ const FindPwBox = () => {
     })
 
     const handlePhoneVerification = () => {
-        if (username && phone && birthdate) {
-            fetch(`/api/send-verification-code?phone=${phone}`)
+        if (pw.username && pw.phone && pw.birthdate) {
+            fetch(`/api/send-verification-code?phone=${pw.phone}`)
                 .then(response => response.json())
                 .then(data => {
-                    setIsPhoneValid(data.isSent);
-                    setVerificationCode(data.verificationCode);
+                    setValid.setIsPhoneValid(data.isSent);
+                    setPw.setVerificationCode(data.verificationCode);
                 });
         }
     };
 
     const handleVerifyCode = () => {
-        if (inputCode === verificationCode) {
-            setIsVerified(true);
+        if (pw.inputCode === pw.verificationCode) {
+            setValid.setIsVerified(true);
         }
     };
 
     const handleFindPassword = () => {
-        if (isVerified) {
-            fetch(`/api/find-password?phone=${phone}&birthdate=${birthdate}&username=${username}`)
+        if (valid.isVerified) {
+            fetch(`/api/find-password?phone=${pw.phone}&birthdate=${pw.brithdate}&username=${pw.username}`)
                 .then(response => response.json())
-                .then(data => setResetLink(data.resetLink));
+                .then(data => setPw.setResetLink(data.resetLink));
         }
     };
 
-    const isCheckId = username && birthdate && phone;
+    const isCheckId = pw.username && pw.brithdate && pw.phone;
     const phoneRegex = /^[0-9]{10,11}$/;
-    const isPhoneInputValid = phoneRegex.test(phone);
+    const isPhoneInputValid = phoneRegex.test(pw.phone);
 
     return (
         <div className="flex justify-center items-center p-8 bg-white shadow-md rounded-lg">
@@ -53,8 +53,8 @@ const FindPwBox = () => {
                         <input 
                             type="text"
                             placeholder="아이디"
-                            value={username}
-                            onChange={(e) => setUsername(e.target.value)}
+                            value={pw.username}
+                            onChange={(e) => setPw.setUsername(e.target.value)}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
                         />
                     </div>
@@ -62,8 +62,8 @@ const FindPwBox = () => {
                         <input 
                             type="text"
                             placeholder="생년월일 (예: 20010601)"
-                            value={birthdate}
-                            onChange={(e) => setBirthdate(e.target.value)}
+                            value={pw.brithdate}
+                            onChange={(e) => setPw.setBirthdate(e.target.value)}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
                         />
                     </div>
@@ -71,25 +71,25 @@ const FindPwBox = () => {
                         <input
                             type="text"
                             placeholder="등록된 휴대폰 번호"
-                            value={phone}
-                            onChange={(e) => setPhone(e.target.value)}
+                            value={pw.phone}
+                            onChange={(e) => setPw.setPhone(e.target.value)}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
                         />
                        <button
                             type="button"
-                            disabled={!isPhoneInputValid}
+                            disabled={!valid.isPhoneInputValid}
                             onClick={handlePhoneVerification}
                             className={`w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3 ${isPhoneInputValid ? 'bg-blue-500' : 'bg-gray-300'} text-white`}
                         >
                             인증번호 받기
                         </button>
-                        {isPhoneValid && (
+                        {valid.isPhoneValid && (
                             <>
                                 <input 
                                     type="text"
                                     placeholder="인증번호"
-                                    value={inputCode}
-                                    onChange={(e) => setInputCode(e.target.value)}
+                                    value={pw.inputCode}
+                                    onChange={(e) => setPw.setInputCode(e.target.value)}
                                     className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                                 <button
@@ -101,8 +101,8 @@ const FindPwBox = () => {
                                 </button>
                             </>
                         )}
-                        {isVerified && <p className="text-green-500">인증을 완료하였습니다.</p>}
-                        {isVerified && (
+                        {valid.isVerified && <p className="text-green-500">인증을 완료하였습니다.</p>}
+                        {valid.isVerified && (
                             <button
                                 type="button"
                                 onClick={handleFindPassword}
@@ -111,7 +111,7 @@ const FindPwBox = () => {
                                 확인
                             </button>
                         )}
-                        {resetLink && <p className="text-green-500">비밀번호 재설정 링크: {resetLink}</p>}
+                        {pw.resetLink && <p className="text-green-500">비밀번호 재설정 링크: {pw.resetLink}</p>}
                     </div>
                     <div>
                         <ul className='list-disc text-sm text-gray-500'>
