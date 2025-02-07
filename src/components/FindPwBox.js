@@ -46,10 +46,10 @@ const FindPwBox = () => {
     return (
         <div className="flex justify-center items-center p-8 bg-white shadow-md rounded-lg">
             <div className="w-full p-4">
-                <h2 className="text-2xl font-bold mb-6 text-center">비밀번호 찾기</h2>
+                <h2 className="text-2xl font-bold mb-10 text-center">비밀번호 찾기</h2>
                 <form className="items-center w-1/2 mx-auto">
                     <h4 className='mb-3'>등록된 휴대폰 번호로 찾기</h4>
-                    <div>
+                    <div className='mb-3'>
                         <input 
                             type="text"
                             placeholder="아이디"
@@ -58,7 +58,7 @@ const FindPwBox = () => {
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
                         />
                     </div>
-                    <div>
+                    <div className='mb-3'>
                         <input 
                             type="text"
                             placeholder="생년월일 (예: 20010601)"
@@ -67,7 +67,7 @@ const FindPwBox = () => {
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
                         />
                     </div>
-                    <div className='flex space-x-2'>
+                    <div className='flex space-x-2 mb-10'>
                         <input
                             type="text"
                             placeholder="등록된 휴대폰 번호"
@@ -113,7 +113,7 @@ const FindPwBox = () => {
                         )}
                         {pw.resetLink && <p className="text-green-500">비밀번호 재설정 링크: {pw.resetLink}</p>}
                     </div>
-                    <div>
+                    <div className='mb-3'>
                         <ul className='list-disc text-sm text-gray-500'>
                             <li>Facebook, Twitter등 외부 연동 계정의 아이디 및 비밀번호는 가입하신 SNS 사이트에서 확인하시길 바랍니다.</li>
                             <li>본인 인증 시 제공되는 정보는 인증기관에서 수집하며, 인증 수단 이외의 용도로 사용하지 않습니다.</li>

@@ -58,9 +58,9 @@ const SignupBox = () => {
     return (
         <div className="flex justify-center items-center p-8 bg-white shadow-md rounded-lg">
             <div className="w-full p-4">
-                <h2 className="text-3xl font-bold mb-6 text-center">정보 입력</h2>
+                <h2 className="text-3xl font-bold mb-10 text-center">정보 입력</h2>
                 <form className="items-center w-1/2 mx-auto ">
-                    <div>
+                    <div className='mb-3'>
                         <h1>아이디</h1>
                         <div className="flex space-x-2">
                             <input 
@@ -80,7 +80,7 @@ const SignupBox = () => {
                         </div>
                         {signup.username === '' ? <p className="text-gray-500">4~12자/영문 소문자(숫자 조합 가능)</p> : (signupValid.isUsernameValid === null ? null : signupValid.isUsernameValid ? <p className="text-green-500">사용 가능한 아이디입니다.</p> : <p className="text-red-500">이미 사용 중인 아이디입니다.</p>)}
                     </div>
-                    <div>
+                    <div className='mb-3'>
                         <h1>비밀번호</h1>
                         <input 
                             type="password"
@@ -98,7 +98,7 @@ const SignupBox = () => {
                         />
                         {signup.password === '' && signup.confirmPassword === '' ? <p className="text-gray-500">8~20자/영문 대문자, 소문자, 숫자, 특수문자 중 2가지 이상 조합</p> : (signup.password === signup.confirmPassword && signupValid.isPasswordValid ? <p className="text-green-500">사용 가능한 비밀번호입니다.</p> : <p className="text-red-500">영문 대소문자, 숫자, 특수기호(@,$,!,%,*,?,&)중 2가지 이상을 조합하여 8~20자로 입력해주세요</p>)}
                     </div>
-                    <div>
+                    <div className='mb-3'>
                         <h1>이메일</h1>
                         <div className="flex space-x-2 items-center">
                             <input 
@@ -123,7 +123,7 @@ const SignupBox = () => {
                         {signupValid.isEmailValid === null ? null : signupValid.isEmailValid ? <p className="text-green-500">사용 가능한 이메일입니다.</p> : <p className="text-red-500">유효하지 않은 이메일입니다.</p>}
                         <p className='text-sm mb-5 text-gray-500'>더 안전하게 계정을 보호하려면 가입 후 [내정보 > 회원정보 수정]에서 이메일 인증을 진행해주세요.</p>
                     </div>
-                    <div>
+                    <div className='mb-3'>
                         <h1>휴대폰 번호</h1>
                         <div className="flex space-x-2">
                             <input 

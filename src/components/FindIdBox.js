@@ -46,10 +46,10 @@ const FindIdBox = () => {
     return (
         <div className="flex justify-center items-center p-8 bg-white shadow-md rounded-lg">
             <div className="w-full p-4">
-                <h2 className="text-2xl font-bold mb-6 text-center">아이디 찾기</h2>
+                <h2 className="text-2xl font-bold mb-10 text-center">아이디 찾기</h2>
                 <form className="items-center w-1/2 mx-auto">
-                    <h4 className='mb-3'>등록된 휴대폰 번호로 찾기</h4>
-                    <div>
+                    <h3 className='mb-5'>등록된 휴대폰 번호로 찾기</h3>
+                    <div className='mb-3'>
                         <input 
                             type="text"
                             placeholder="생년월일 (예: 20010601)"
@@ -58,7 +58,7 @@ const FindIdBox = () => {
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
                         />
                     </div>
-                    <div className="flex space-x-2">
+                    <div className="flex space-x-2 mb-3">
                         <input 
                             type="text"
                             placeholder="등록된 휴대폰 번호"
@@ -68,7 +68,7 @@ const FindIdBox = () => {
                         />
                         <button
                             type="button"
-                            disabled={!valid.isPhoneInputValid}
+                            disabled={!valid.isPhoneValid}
                             onClick={handlePhoneVerification}
                             className={`w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3 ${isPhoneInputValid ? 'bg-blue-500' : 'bg-gray-300'} text-white`}
                         >
@@ -104,7 +104,7 @@ const FindIdBox = () => {
                         )}
                         {id.foundId && <p className="text-green-500">아이디: {id.foundId}</p>}
                     </div>
-                    <div>
+                    <div className='mb-3'>
                         <ul className="list-disc text-sm text-gray-500">
                             <li>Facebook, Twitter 등 외부 연동 계정의 아이디 및 비밀번호는 가입하신 SNS 사이트에서 확인하시길 바랍니다</li>
                             <li>본인 인증 시 제공되는 정보는 인증기관에서 수집하며, 인증 수단 이외의 용도로 사용하지 않습니다.</li>
