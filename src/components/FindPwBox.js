@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const FindPwBox = () => {
     const [pw, setPw] = useState({
         username: '',
-        brithdate: '',
+        birthdate: '',
         phone: '',
         verificationCode: '',
         inputCode: '',
@@ -14,32 +15,36 @@ const FindPwBox = () => {
         isVerified: false
     })
 
-    const handlePhoneVerification = () => {
+    const handlePhoneVerification = async () => {
         if (pw.username && pw.phone && pw.birthdate) {
-            fetch(`/api/send-verification-code?phone=${pw.phone}`)
-                .then(response => response.json())
-                .then(data => {
-                    setValid.setIsPhoneValid(data.isSent);
-                    setPw.setVerificationCode(data.verificationCode);
-                });
+            try {
+                const response = await axios.get(`/api/send-verification-code`, {params: {phone: pw.phone}});
+                setValid(prevState => ({...prevState, isPhoneValid: response.data.isSent}));
+                setPw(prevState => ({...prevState, verificationCode: response.data.verificationCode}));
+            } catch (error) {
+                console.error('Error sending verification code:', error);
+            }
         }
     };
 
     const handleVerifyCode = () => {
         if (pw.inputCode === pw.verificationCode) {
-            setValid.setIsVerified(true);
+            setValid(prevState => ({...prevState, isVerified: true}));
         }
     };
 
-    const handleFindPassword = () => {
+    const handleFindPassword = async () => {
         if (valid.isVerified) {
-            fetch(`/api/find-password?phone=${pw.phone}&birthdate=${pw.brithdate}&username=${pw.username}`)
-                .then(response => response.json())
-                .then(data => setPw.setResetLink(data.resetLink));
+            try {
+                const response = await axios.get(`/api/find-password`, {params: {phone: pw.phone, birthdate: pw.birthdate, username: pw.username}});
+                setPw(prevState => ({...prevState, resetLink: response.data.resetLink}));
+            } catch (error) {
+                console.error('Error finding PW:', error);
+            }
         }
     };
 
-    const isCheckId = pw.username && pw.brithdate && pw.phone;
+    const isCheckId = pw.username && pw.birthdate && pw.phone;
     const phoneRegex = /^[0-9]{10,11}$/;
     const isPhoneInputValid = phoneRegex.test(pw.phone);
 
@@ -62,7 +67,7 @@ const FindPwBox = () => {
                         <input 
                             type="text"
                             placeholder="생년월일 (예: 20010601)"
-                            value={pw.brithdate}
+                            value={pw.birthdate}
                             onChange={(e) => setPw.setBirthdate(e.target.value)}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
                         />

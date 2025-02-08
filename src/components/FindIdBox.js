@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 const FindIdBox = () => {
    const [id, setId] = useState({
@@ -14,28 +15,32 @@ const FindIdBox = () => {
     isVerified: false
    })
 
-    const handlePhoneVerification = () => {
+    const handlePhoneVerification = async () => {
         if (id.username && id.phone && id.birthdate) {
-            fetch(`/api/send-verification-code?phone=${id.phone}`)
-                .then(response => response.json())
-                .then(data => {
-                    setValid.setIsPhoneValid(data.isSent);
-                    setId.setVerificationCode(data.verificationCode);
-                });
+            try {
+                const response = await axios.get(`/api/send-verification-code`, {params: {phone: id.phone}});
+                setValid (prevState => ({...prevState, isPhoneValid: response.data.isSent}));
+                setId(prevState => ({...prevState, verificationCode: response.data.verificationCode}));
+            } catch (error) {
+                console.error('Error sending verification code:', error);
+            }
         }
     };
 
     const handleVerifyCode = () => {
         if (id.inputCode === id.verificationCode) {
-            setValid.setIsVerified(true);
+            setValid(prevState => ({...prevState, isVerified: true}));
         }
     };
 
-    const handleFindId = () => {
+    const handleFindId = async () => {
         if (valid.isVerified) {
-            fetch(`/api/find-id?phone=${id.phone}&birthdate=${id.birthdate}&username=${id.username}`)
-                .then(response => response.json())
-                .then(data => setId.setFoundId(data.id));
+            try {
+                const response = await axios.get(`/api/find-id`, { params: { phone: id.phone, birthdate: id.birthdate, username: id.username } });
+                setId(prevState => ({...prevState, foundId: response.date.id}));
+            } catch (error) {
+                console.error(`Error finding ID:`, error);
+            }
         }
     };
 

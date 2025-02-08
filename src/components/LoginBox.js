@@ -42,11 +42,11 @@ const LoginBox = () => {
                             로그인
                         </button>
                         <div className="flex justify-between mt-4">
-                            <button className="p-3 bg-green-500 rounded-full text-white">N</button>
-                            <button className="p-3 bg-yellow-400 rounded-full text-white">K</button>
-                            <button className="p-3 bg-blue-600 rounded-full text-white">F</button>
-                            <button className="p-3 bg-blue-700 rounded-full text-white">T</button>
-                            <button className="p-3 bg-black rounded-full text-white">A</button>
+                            <button className="p-3 bg-green-500  text-white">N</button>
+                            <button className="p-3 bg-yellow-400 rounded-lg text-white">K</button>
+                            <button className="p-3 bg-blue-600 rounded-lg text-white">F</button>
+                            <button className="p-3 bg-blue-700 rounded-lg text-white">T</button>
+                            <button className="p-3 bg-black rounded-lg text-white">A</button>
                         </div>
                     </form>
                 </div>
