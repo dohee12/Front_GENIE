@@ -45,7 +45,7 @@ const FindIdBox = () => {
     };
 
     const isCheckId = id.birthdate && id.phone;
-    const phoneRegex = /^[0-9]{10,11}$/;
+    const phoneRegex = /^[0-9]{10,12}$/;
     const isPhoneInputValid = phoneRegex.test(id.phone);
 
     return (
@@ -59,7 +59,7 @@ const FindIdBox = () => {
                             type="text"
                             placeholder="생년월일 (예: 20010601)"
                             value={id.birthdate}
-                            onChange={(e) => setId.setBirthdate(e.target.value)}
+                            onChange={(e) => setId(e.target.value)}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
                         />
                     </div>
@@ -68,7 +68,7 @@ const FindIdBox = () => {
                             type="text"
                             placeholder="등록된 휴대폰 번호"
                             value={id.phone}
-                            onChange={(e) => setId.setPhone(e.target.value)}
+                            onChange={(e) => setId(e.target.value)}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
                         />
                         <button

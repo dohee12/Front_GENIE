@@ -59,7 +59,7 @@ const FindPwBox = () => {
                             type="text"
                             placeholder="아이디"
                             value={pw.username}
-                            onChange={(e) => setPw.setUsername(e.target.value)}
+                            onChange={(e) => setPw(e.target.value)}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
                         />
                     </div>
@@ -68,7 +68,7 @@ const FindPwBox = () => {
                             type="text"
                             placeholder="생년월일 (예: 20010601)"
                             value={pw.birthdate}
-                            onChange={(e) => setPw.setBirthdate(e.target.value)}
+                            onChange={(e) => setPw(e.target.value)}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
                         />
                     </div>
@@ -77,7 +77,7 @@ const FindPwBox = () => {
                             type="text"
                             placeholder="등록된 휴대폰 번호"
                             value={pw.phone}
-                            onChange={(e) => setPw.setPhone(e.target.value)}
+                            onChange={(e) => setPw(e.target.value)}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
                         />
                        <button

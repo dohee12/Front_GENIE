@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
+const usernameRegex = /^[a-z][a-z0-9]{3,11}$/;
+const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,20}$/;
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const SignupBox = () => {
+    // 회원가입 시 필수 요소를 useState로 선언
     const [signup, setSignup] = useState({
         username: '',
         password: '',
@@ -10,6 +15,7 @@ const SignupBox = () => {
         emailDomain: '',
         phone: ''
     });
+    // 필수 요소의 값을 useState로 선언언
     const [signupValid, setSignupValid] = useState({
         isUsernameValid: null,
         isPasswordValid: null,
@@ -19,7 +25,6 @@ const SignupBox = () => {
 
     useEffect(() => {
         const checkUsername = async () => {
-            const usernameRegex = /^[a-z][a-z0-9]{3,11}$/;
             if (signup.username && usernameRegex.test(signup.username)) {
                 try {
                     const response = await axios.get(`api/check-username`,{params: {username:signup.username}});
@@ -35,8 +40,8 @@ const SignupBox = () => {
         checkUsername();
     },[signup.username]);
 
+    // 
     useEffect(() => {
-        const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,20}$/;
         if (passwordRegex.test(signup.password) && signup.password === signup.confirmPassword) {
             setSignupValid(prevState => ({...prevState, isPasswordValid: true}));
         } else {
@@ -45,14 +50,14 @@ const SignupBox = () => {
     }, [signup.password, signup.confirmPassword]);
 
     useEffect(() => {
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        
         if (signup.email && signup.emailDomain) {
             setSignupValid(prevState => ({...prevState, isEmailValid: emailRegex.test(`${signup.email}@${signup.emailDomain}`)}));
         } else {
             setSignupValid(prevState => ({...prevState, isEmailValid: null}));
         }
     }, [signup.email, signup.emailDomain]);
-
+    
     const handlePhoneVerification = async () => {
         if (signup.phone) {
             try {
