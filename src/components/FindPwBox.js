@@ -2,25 +2,27 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const FindPwBox = () => {
-    const [pw, setPw] = useState({
-        username: '',
+    const [pwForm, setPwForm] = useState({
+        loginId: '',
         birthdate: '',
         phone: '',
         verificationCode: '',
         inputCode: '',
         resetLink: ''
     })
-    const [valid, setValid] = useState({
+    const [pwValid, setPwValid] = useState({
         isPhoneInputValid: false,
         isVerified: false
     })
 
     const handlePhoneVerification = async () => {
-        if (pw.username && pw.phone && pw.birthdate) {
+        if (pwForm.username && pwForm.phone && pwForm.birthdate) {
             try {
-                const response = await axios.get(`/api/send-verification-code`, {params: {phone: pw.phone}});
-                setValid(prevState => ({...prevState, isPhoneValid: response.data.isSent}));
-                setPw(prevState => ({...prevState, verificationCode: response.data.verificationCode}));
+                const response = await axios.get(`/api/send-verification-code`, {
+                    phone: pwForm.phone
+                });
+                setPwValid({...pwValid, isPhoneValid: response.data.isSent});
+                setPwForm({...pwForm, verificationCode: response.data.verificationCode});
             } catch (error) {
                 console.error('Error sending verification code:', error);
             }
@@ -28,25 +30,29 @@ const FindPwBox = () => {
     };
 
     const handleVerifyCode = () => {
-        if (pw.inputCode === pw.verificationCode) {
-            setValid(prevState => ({...prevState, isVerified: true}));
+        if (pwForm.inputCode === pwForm.verificationCode) {
+            setPwValid({...pwValid, isVerified: true});
         }
     };
 
     const handleFindPassword = async () => {
-        if (valid.isVerified) {
+        if (pwValid.isVerified) {
             try {
-                const response = await axios.get(`/api/find-password`, {params: {phone: pw.phone, birthdate: pw.birthdate, username: pw.username}});
-                setPw(prevState => ({...prevState, resetLink: response.data.resetLink}));
+                const response = await axios.get(`/api/find-password`, {
+                    phone: pwForm.phone, 
+                    birthdate: pwForm.birthdate, 
+                    loginId: pwForm.loginId
+                });
+                setPwForm({...pwForm, resetLink: response.data.resetLink});
             } catch (error) {
                 console.error('Error finding PW:', error);
             }
         }
     };
 
-    const isCheckId = pw.username && pw.birthdate && pw.phone;
+    const isCheckId = pwForm.username && pwForm.birthdate && pwForm.phone;
     const phoneRegex = /^[0-9]{10,11}$/;
-    const isPhoneInputValid = phoneRegex.test(pw.phone);
+    const isPhoneInputValid = phoneRegex.test(pwForm.phone);
 
     return (
         <div className="flex justify-center items-center p-8 bg-white shadow-md rounded-lg">
@@ -58,8 +64,8 @@ const FindPwBox = () => {
                         <input 
                             type="text"
                             placeholder="아이디"
-                            value={pw.username}
-                            onChange={(e) => setPw(e.target.value)}
+                            value={pwForm.loginId}
+                            onChange={(e) => setPwForm(e.target.value)}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
                         />
                     </div>
@@ -67,8 +73,8 @@ const FindPwBox = () => {
                         <input 
                             type="text"
                             placeholder="생년월일 (예: 20010601)"
-                            value={pw.birthdate}
-                            onChange={(e) => setPw(e.target.value)}
+                            value={pwForm.birthdate}
+                            onChange={(e) => setPwForm(e.target.value)}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
                         />
                     </div>
@@ -76,25 +82,25 @@ const FindPwBox = () => {
                         <input
                             type="text"
                             placeholder="등록된 휴대폰 번호"
-                            value={pw.phone}
-                            onChange={(e) => setPw(e.target.value)}
+                            value={pwForm.phone}
+                            onChange={(e) => setPwForm(e.target.value)}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
                         />
                        <button
                             type="button"
-                            disabled={!valid.isPhoneInputValid}
+                            disabled={!pwValid.isPhoneInputValid}
                             onClick={handlePhoneVerification}
                             className={`w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3 ${isPhoneInputValid ? 'bg-blue-500' : 'bg-gray-300'} text-white`}
                         >
                             인증번호 받기
                         </button>
-                        {valid.isPhoneValid && (
+                        {pwValid.isPhoneValid && (
                             <>
                                 <input 
                                     type="text"
                                     placeholder="인증번호"
-                                    value={pw.inputCode}
-                                    onChange={(e) => setPw.setInputCode(e.target.value)}
+                                    value={pwForm.inputCode}
+                                    onChange={(e) => setPwForm.setInputCode(e.target.value)}
                                     className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                                 <button
@@ -106,8 +112,8 @@ const FindPwBox = () => {
                                 </button>
                             </>
                         )}
-                        {valid.isVerified && <p className="text-green-500">인증을 완료하였습니다.</p>}
-                        {valid.isVerified && (
+                        {pwValid.isVerified && <p className="text-green-500">인증을 완료하였습니다.</p>}
+                        {pwValid.isVerified && (
                             <button
                                 type="button"
                                 onClick={handleFindPassword}
@@ -116,7 +122,7 @@ const FindPwBox = () => {
                                 확인
                             </button>
                         )}
-                        {pw.resetLink && <p className="text-green-500">비밀번호 재설정 링크: {pw.resetLink}</p>}
+                        {pwForm.resetLink && <p className="text-green-500">비밀번호 재설정 링크: {pwForm.resetLink}</p>}
                     </div>
                     <div className='mb-3'>
                         <ul className='list-disc text-sm text-gray-500'>
