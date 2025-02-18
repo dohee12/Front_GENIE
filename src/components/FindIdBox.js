@@ -2,25 +2,27 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const FindIdBox = () => {
-   const [id, setId] = useState({
-    username: '',
+   const [idForm, setIdForm] = useState({
+    loginId:"",
     birthdate: '',
     phone: '',
     verificationCode: '',
     inputCode: '',
     foundId: ''
    })
-   const [valid, setValid] = useState({
+   const [idValid, setIdValid] = useState({
     isPhoneValid: false,
     isVerified: false
    })
 
     const handlePhoneVerification = async () => {
-        if (id.username && id.phone && id.birthdate) {
+        if (idForm.phone && idForm.birthdate) {
             try {
-                const response = await axios.get(`/api/send-verification-code`, {params: {phone: id.phone}});
-                setValid (prevState => ({...prevState, isPhoneValid: response.data.isSent}));
-                setId(prevState => ({...prevState, verificationCode: response.data.verificationCode}));
+                const response = await axios.get(`/api/send-verification-code`,{
+                    phone: idForm.phone
+                });
+                setIdValid ({...idValid, isPhoneValid: response.data.isSent});
+                setIdForm({...idForm, verificationCode: response.data.verificationCode});
             } catch (error) {
                 console.error('Error sending verification code:', error);
             }
@@ -28,25 +30,32 @@ const FindIdBox = () => {
     };
 
     const handleVerifyCode = () => {
-        if (id.inputCode === id.verificationCode) {
-            setValid(prevState => ({...prevState, isVerified: true}));
+        if (idForm.inputCode === idForm.verificationCode) {
+            setIdValid({...idValid, isVerified: true});
         }
     };
 
     const handleFindId = async () => {
-        if (valid.isVerified) {
+        if (idValid.isVerified) {
             try {
-                const response = await axios.get(`/api/find-id`, { params: { phone: id.phone, birthdate: id.birthdate, username: id.username } });
-                setId(prevState => ({...prevState, foundId: response.date.id}));
+                const response = await axios.get(`/api/find-id`, {
+                    phone: idForm.phone, 
+                    birthdate: idForm.birthdate, 
+                    username: idForm.username 
+                });
+                setIdForm({...idForm, foundId: response.date.id});
             } catch (error) {
-                console.error(`Error finding ID:`, error);
+                
+                console.error(`Error
+                     finding ID:`, error);
             }
+            
         }
     };
 
-    const isCheckId = id.birthdate && id.phone;
+    const isCheckId = idForm.birthdate && idForm.phone;
     const phoneRegex = /^[0-9]{10,12}$/;
-    const isPhoneInputValid = phoneRegex.test(id.phone);
+    const isPhoneInputValid = phoneRegex.test(idForm.phone);
 
     return (
         <div className="flex justify-center items-center p-8 bg-white shadow-md rounded-lg">
@@ -58,8 +67,8 @@ const FindIdBox = () => {
                         <input 
                             type="text"
                             placeholder="생년월일 (예: 20010601)"
-                            value={id.birthdate}
-                            onChange={(e) => setId(e.target.value)}
+                            value={idForm.birthdate}
+                            onChange={(e) => setIdForm(e.target.value)}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
                         />
                     </div>
@@ -67,25 +76,25 @@ const FindIdBox = () => {
                         <input 
                             type="text"
                             placeholder="등록된 휴대폰 번호"
-                            value={id.phone}
-                            onChange={(e) => setId(e.target.value)}
+                            value={idForm.phone}
+                            onChange={(e) => setIdForm(e.target.value)}
                             className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3"
                         />
                         <button
                             type="button"
-                            disabled={!valid.isPhoneValid}
+                            disabled={!idValid.isPhoneValid}
                             onClick={handlePhoneVerification}
                             className={`w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3 ${isPhoneInputValid ? 'bg-blue-500' : 'bg-gray-300'} text-white`}
                         >
                             인증번호 받기
                         </button>
-                        {valid.isPhoneValid && (
+                        {idValid.isPhoneValid && (
                             <>
                                 <input 
                                     type="text"
                                     placeholder="인증번호"
-                                    value={id.inputCode}
-                                    onChange={(e) => setId.setInputCode(e.target.value)}
+                                    value={idForm.inputCode}
+                                    onChange={(e) => setIdForm.setInputCode(e.target.value)}
                                     className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 />
                                 <button
@@ -97,8 +106,8 @@ const FindIdBox = () => {
                                 </button>
                             </>
                         )}
-                        {valid.isVerified && <p className="text-green-500">인증을 완료하였습니다.</p>}
-                        {valid.isVerified && (
+                        {idValid.isVerified && <p className="text-green-500">인증을 완료하였습니다.</p>}
+                        {idValid.isVerified && (
                             <button
                                 type="button"
                                 onClick={handleFindId}
@@ -107,7 +116,7 @@ const FindIdBox = () => {
                                 확인
                             </button>
                         )}
-                        {id.foundId && <p className="text-green-500">아이디: {id.foundId}</p>}
+                        {idForm.foundId && <p className="text-green-500">아이디: {idForm.foundId}</p>}
                     </div>
                     <div className='mb-3'>
                         <ul className="list-disc text-sm text-gray-500">
