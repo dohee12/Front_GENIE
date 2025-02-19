@@ -23,9 +23,9 @@ const SignupBox = () => {
         isPasswordValid: null,
         isEmailValid: null,
         isPhoneValid: null,
-        isVerified: false
+        isVerified: false,
+        errorMessage: ""
     });
-    const [errorMessage, setErrorMessage] = useState("");
 
     /* 아이디 중복 확인 요청 핸들러 */
     const signIdHandle = async () => {
@@ -101,16 +101,16 @@ const SignupBox = () => {
                         ...signupForm,
                         verificationCode: response.data.verificationCode
                     });
-                    setErrorMessage("");
+                    setSignupValid("");
                 } else {
-                    setErrorMessage("인증번호 발송에 실패했습니다.");
+                    setSignupValid("인증번호 발송에 실패했습니다.");
                 }
             } catch (e) {
                 console.error('Error sending verification code:', e);
-                setErrorMessage("인증번호 발송 중 오류가 발생했습니다.");
+                setSignupValid("인증번호 발송 중 오류가 발생했습니다.");
             }
         } else {
-            setErrorMessage("휴대폰 번호를 입력해주세요.");
+            setSignupValid("휴대폰 번호를 입력해주세요.");
         }
     };
 
@@ -121,9 +121,9 @@ const SignupBox = () => {
                 ...signupValid,
                 isVerified: true
             });
-            setErrorMessage(""); // Clear any previous error message
+            setSignupValid(""); // Clear any previous error message
         } else {
-            setErrorMessage("인증번호가 일치하지 않습니다.");
+            setSignupValid("인증번호가 일치하지 않습니다.");
         }
     };
 
@@ -243,7 +243,7 @@ const SignupBox = () => {
                                 인증번호 받기
                             </button>
                         </div>
-                        {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+                        {signupValid.errorMessage && <p className="text-red-500">{signupValid.errorMessage}</p>}
                         {signupValid.isPhoneValid && (
                             <>
                                 <div className="flex space-x-2 mb-3">
