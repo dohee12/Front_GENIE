@@ -16,10 +16,10 @@ const FindPwBox = () => {
     /* 필수요소의 유효성을 useState로 선언언 */
     const [pwValid, setPwValid] = useState({
         isPhoneValid: false,
-        isVerified: false
+        isVerified: false,
+        isPasswordReset: false,
+        errorMessage: ""
     });
-    const [errorMessage, setErrorMessage] = useState("");
-    const [isPasswordReset, setIsPasswordReset] = useState(false);
 
      /* 휴대폰 번호로 인증번호 요청 핸들러 */
     const handlePhoneVerification = async () => {
@@ -31,16 +31,16 @@ const FindPwBox = () => {
                 if (response.data.isSent) {
                     setPwValid({ ...pwValid, isPhoneValid: true });
                     setPwForm({ ...pwForm, verificationCode: response.data.verificationCode });
-                    setErrorMessage(""); // 이전 오류 메시지 지우기기
+                    setPwValid(""); // 이전 오류 메시지 지우기기
                 } else {
-                    setErrorMessage("인증번호 발송에 실패했습니다.");
+                    setPwValid("인증번호 발송에 실패했습니다.");
                 }
             } catch (error) {
                 console.error('Error sending verification code:', error);
-                setErrorMessage("인증번호 발송 중 오류가 발생했습니다.");
+                setPwValid("인증번호 발송 중 오류가 발생했습니다.");
             }
         } else {
-            setErrorMessage("아이디, 생년월일, 휴대폰 번호를 입력해주세요.");
+            setPwValid("아이디, 생년월일, 휴대폰 번호를 입력해주세요.");
         }
     };
 
@@ -48,16 +48,16 @@ const FindPwBox = () => {
     const handleVerifyCode = () => {
         if (pwForm.inputCode === pwForm.verificationCode) {
             setPwValid({ ...pwValid, isVerified: true });
-            setErrorMessage(""); // 이전 오류 메시지 지우기
+            setPwValid(""); // 이전 오류 메시지 지우기
         } else {
-            setErrorMessage("인증번호가 일치하지 않습니다.");
+            setPwValid("인증번호가 일치하지 않습니다.");
         }
     };
 
     /* 비밀번호 찾기 요청 핸들러 */
     const handleFindPassword = async () => {
         if (pwValid.isVerified) {
-            setIsPasswordReset(true);
+            setPwValid(true);
         }
     };
 
@@ -71,14 +71,14 @@ const FindPwBox = () => {
                 });
                 if (response.status === 200) {
                     alert("비밀번호가 성공적으로 변경되었습니다.");
-                    setIsPasswordReset(false);
+                    setPwValid(false);
                 }
             } catch (error) {
                 console.error('Error resetting password:', error);
-                setErrorMessage("비밀번호 변경 중 오류가 발생했습니다.");
+                setPwValid("비밀번호 변경 중 오류가 발생했습니다.");
             }
         } else {
-            setErrorMessage("비밀번호가 일치하지 않습니다.");
+            setPwValid("비밀번호가 일치하지 않습니다.");
         }
     };
 
@@ -133,7 +133,7 @@ const FindPwBox = () => {
                         </button>
                     </div>
                     {/* 오류 메시지 표시 */}
-                    {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+                    {pwValid.errorMessage && <p className="text-red-500">{pwValid.errorMessage}</p>}
                     {/* 인증번호 입력 및 확인 */}
                     {pwValid.isPhoneValid && (
                         <>
@@ -154,7 +154,7 @@ const FindPwBox = () => {
                                 </button>
                             </div>
                             {pwValid.isVerified && <p className="text-green-500">인증을 완료하였습니다.</p>}
-                            {pwValid.isVerified && !isPasswordReset && (
+                            {pwValid.isVerified && !pwValid.isPasswordReset && (
                                 <button
                                     type="button"
                                     onClick={handleFindPassword}
@@ -163,7 +163,7 @@ const FindPwBox = () => {
                                     확인
                                 </button>
                             )}
-                            {isPasswordReset && (
+                            {pwValid.isPasswordReset && (
                                 <>
                                     <div className='mb-3'>
                                         {/* 새 비밀번호 입력 필드 */}
