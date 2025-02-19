@@ -14,9 +14,9 @@ const FindIdBox = () => {
     /* 필수 요소의 유효성을 useState로 선언언 */
     const [idValid, setIdValid] = useState({
         isPhoneValid: false,
-        isVerified: false
+        isVerified: false,
+        errorMessage: ""
     });
-    const [errorMessage, setErrorMessage] = useState("");
 
     /* 휴대폰 번호로 인증번호 요청 핸들러 */
     const handlePhoneVerification = async () => {
@@ -29,14 +29,14 @@ const FindIdBox = () => {
                     setIdValid({ ...idValid, isPhoneValid: true });
                     setIdForm({ ...idForm, verificationCode: response.data.verificationCode });
                 } else {
-                    setErrorMessage("인증번호 발송에 실패했습니다.");
+                    setIdValid("인증번호 발송에 실패했습니다.");
                 }
             } catch (error) {
                 console.error('Error sending verification code:', error);
-                setErrorMessage("인증번호 발송 중 오류가 발생했습니다.");
+                setIdValid("인증번호 발송 중 오류가 발생했습니다.");
             }
         } else {
-            setErrorMessage("생년월일과 휴대폰 번호를 입력해주세요.");
+            setIdValid("생년월일과 휴대폰 번호를 입력해주세요.");
         }
     };
 
@@ -44,9 +44,9 @@ const FindIdBox = () => {
     const handleVerifyCode = () => {
         if (idForm.inputCode === idForm.verificationCode) {
             setIdValid({ ...idValid, isVerified: true });
-            setErrorMessage(""); // 이전 오류 메시지 지우기
+            setIdValid(""); // 이전 오류 메시지 지우기
         } else {
-            setErrorMessage("인증번호가 일치하지 않습니다.");
+            setIdValid("인증번호가 일치하지 않습니다.");
         }
     };
 
@@ -61,10 +61,10 @@ const FindIdBox = () => {
                     }
                 });
                 setIdForm({ ...idForm, foundId: response.data.id });
-                setErrorMessage(""); // 이전 오류 메시지 지우기
+                setIdValid(""); // 이전 오류 메시지 지우기
             } catch (error) {
                 console.error('Error finding ID:', error);
-                setErrorMessage("아이디 찾기 중 오류가 발생했습니다.");
+                setIdValid("아이디 찾기 중 오류가 발생했습니다.");
             }
         }
     };
@@ -110,7 +110,7 @@ const FindIdBox = () => {
                         </button>
                     </div>
                     {/* 오류 메시지 표시 */}
-                    {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+                    {idValid.errorMessage && <p className="text-red-500">{idValid.errorMessage}</p>}
                     {/* 인증번호 입력 및 확인 */}
                     {idValid.isPhoneValid && (
                         <>
