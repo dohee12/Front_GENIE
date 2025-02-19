@@ -33,6 +33,7 @@ const LoginBox = () => {
 
         <div className="w-1/2 p-6 flex flex-col justify-center">
           <form className="w-full mt-8">
+            {/* 아이디 입력 필드드 */}
             <input
               type="text"
               placeholder="아이디"
@@ -41,6 +42,7 @@ const LoginBox = () => {
               }
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
             />  
+            {/* 비밀번호 입력 필드 */}
             <input
               type="password"
               onChange={(e) =>
@@ -49,6 +51,7 @@ const LoginBox = () => {
               placeholder="비밀번호"
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
             />
+            {/* 로그인 상태 유지 체크박스스 */}
             <div>
               <input
                 type="checkbox"
@@ -59,6 +62,7 @@ const LoginBox = () => {
                 로그인 상태 유지
               </label>
             </div>
+            {/* 로그인 버튼튼 */}
             <button
               type="button"
               onClick={() => {
@@ -69,6 +73,7 @@ const LoginBox = () => {
               로그인
             </button>
 
+            {/* 소셜 로그인 버튼튼 */}
             <div className="flex justify-between mt-4">
               <button className="p-3 bg-green-500  text-white">N</button>
               <button className="p-3 bg-yellow-400 rounded-lg text-white">
@@ -85,6 +90,7 @@ const LoginBox = () => {
           </form>
         </div>
 
+        {/* 광고 이미지 */}
         <div className="w-1/2 p-4 flex justify-center items-center">
           <img src={image} alt="광고 이미지" className="w-full rounded-md" />
         </div>
