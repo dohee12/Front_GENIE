@@ -28,23 +28,37 @@ const SignupBox = () => {
     });
 
     /* 아이디 중복 확인 요청 핸들러 */
-    const signIdHandle = async () => {
+    const checkUsername = async () => {
         if (signupForm.loginId && usernameRegex.test(signupForm.loginId)) {
             try {
-                const response = await axios.get("http://localhost:8000/api/signup", { 
-                    loginId: signupForm.loginId
-                });
-                
-                if (response.status === 200) {
+                const response = await axios.post('http://localhost:8000/api/check-username', { loginId: signupForm.loginId});
+                if (response.data.isValid) {
                     setSignupValid({
                         ...signupValid,
-                        isUsernameValid: response.data.isValid
+                        isUsernameValid: true,
+                        errorMessage: "사용 가능한 아이디입니다"
+                    });
+                } else {
+                    setSignupValid ({
+                        ...signupValid,
+                        isUsernameValid: false,
+                        errorMessage: "이미 사용 중인 아이디입니다"
                     });
                 }
-            } catch (e) {
-                console.error("Error checking username:", e);
-                alert("아이디가 중복되었거나 오류가 발생하였습니다");
+            } catch (error) {
+                console.log("아이디 중복 확인 오류:", error);
+                setSignupValid({
+                    ...signupValid,
+                    isUsernameValid: false,
+                    errorMessage: "아이디 중복 확인 중 오류가 발생했습니다."
+                });
             }
+        } else {
+            setSignupValid({
+                ...signupValid,
+                isUsernameValid: false,
+                errorMessage: "유효하지 않은 아이디 형식입니다."
+            });
         }
     };
 
@@ -168,7 +182,7 @@ const SignupBox = () => {
                             />
                             <button
                                 type="button"
-                                onClick={signIdHandle}
+                                onClick={checkUsername}
                                 disabled={!signupForm.loginId}
                                 className={`w-1/3 px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mt-3 mb-3 ${signupForm.loginId ? 'bg-blue-500' : 'bg-gray-300'} text-white`}
                             >
