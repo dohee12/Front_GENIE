@@ -4,22 +4,32 @@ import image from "./../img/대표이미지1.jpg";
 
 const LoginBox = () => {
   const [loginForm, setLoginForm] = useState({ id: "", pwd: "" });
+  const [errorMessage,setErrorMessage] = useState('');
 
   /**
    * 로그인 axios 요청 핸들러
    */
   const loginHandler = async () => {
+    console.log("로그인 요청 데이터:", loginForm); // 디버깅용 로그 추가가
+    // 로그인 정보 검증
+    if (!loginForm.id || !loginForm.pwd){
+      setErrorMessage("아이디와 비번을 입력하세요");
+      return;
+    }
     try {
       const result = await axios.post("http://localhost:8000/api/login", {
-        loginId: loginForm.id,
-        password: loginForm.pwd,
+        loginId: "id",
+        pwd: "winter12",
       });
+
+      console.log("서버 응답:", result.data); // 서버 응답 확인
 
       if (result.status === 200) {
         alert("로그인 성공!!");
       }
     } catch (e) {
       console.error(e);
+      setErrorMessage("로그인에 실패했습니다. 다시 시도해 주세요.");
     }
   };
 
@@ -51,6 +61,10 @@ const LoginBox = () => {
               placeholder="비밀번호"
               className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4"
             />
+            {/* 오류 메시지 표시 */}
+            {errorMessage &&
+              <div className="text-red-500 text-sm md-4">{errorMessage}</div>
+            }
             {/* 로그인 상태 유지 체크박스스 */}
             <div>
               <input
