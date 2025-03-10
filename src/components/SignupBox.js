@@ -86,15 +86,16 @@ const SignupBox = () => {
 
     /* 이메일 유효성 검사 */
     useEffect(() => {
-        if (signupForm.email && signupForm.emailDomain) {
+        const fullEmail = `${signupForm.email}@${signupForm.emailDomain}`;
+        if (emailRegex.test(fullEmail)) {
             setSignupValid({
-                ...signupValid, 
-                isEmailValid: emailRegex.test(`${signupForm.email}@${signupForm.emailDomain}`)
+                ...signupValid,
+                isEmailValid: true
             });
         } else {
             setSignupValid({
-                ...signupValid, 
-                isEmailValid: null
+                ...signupValid,
+                isEmailValid: false
             });
         }
     }, [signupForm.email, signupForm.emailDomain]);
