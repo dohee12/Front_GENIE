@@ -66,23 +66,59 @@ const SignupBox = () => {
     useEffect(() => {
         if(signupForm.pwd && signupForm.confirmPassword){
             if (passwordRegex.test(signupForm.pwd) && signupForm.pwd === signupForm.confirmPassword) {
+                setSignupValid(prevstate => ({
+                    ...prevstate,
+                    isPasswordValid: true
+                }));
+            } else {
+                setSignupValid(prevstate => ({
+                    ...prevstate, 
+                    isPasswordValid: null
+                }));
+            } 
+        } else {
+            setSignupValid(prevstate => ({
+                ...prevstate,
+                isPasswordValid: null
+            }));
+        }
+    }, [signupForm.pwd, signupForm.confirmPassword]);
+
+    // 이메일 중복 확인 요청 핸들러
+    const checkEmail = async () => {
+        const fullEmail = `${signupForm.email}@${signupForm.emailDomain}`;
+        if (emailRegex.test(fullEmail)) {
+            try {
+                const response = await axios.post('http://localhost:8000/api/check-email', { email: fullEmail });
+                if (response.data.isValid) {
+                    setSignupValid({
+                        ...signupValid,
+                        isEmailValid: true,
+                        errorMessage: "사용 가능한 이메일입니다"
+                    });
+                } else {
+                    setSignupValid({
+                        ...signupValid,
+                        isEmailValid: false,
+                        errorMessage: "이미 사용 중인 이메일입니다"
+                    });
+                }
+            } catch (error) {
+                console.log("이메일 중복 확인 오류: ", error);
                 setSignupValid({
                     ...signupValid,
-                    isPasswordValid: true
+                    isEmailValid: false,
+                    errorMessage: "이메일 중복 확인 중 오류가 발생했습니다."
                 });
-            } else {
-                setSignupValid({
-                    ...signupValid, 
-                    isPasswordValid: null
-                });
-            } 
+            }
         } else {
             setSignupValid({
                 ...signupValid,
-                isPasswordValid: null
+                isEmailValid: false,
+                errorMessage: "유효하지 않은 이메일 형식입니다."
             });
         }
-    }, [signupForm.pwd, signupForm.confirmPassword]);
+    };
 
     /* 이메일 유효성 검사 */
     useEffect(() => {
@@ -235,7 +271,7 @@ const SignupBox = () => {
                             </select>
                         </div>
                         {signupValid.isEmailValid === null ? null : signupValid.isEmailValid ? <p className="text-green-500">사용 가능한 이메일입니다.</p> : <p className="text-red-500">유효하지 않은 이메일입니다.</p>}
-                        <p className='text-sm mb-5 text-gray-500'>더 안전하게 계정을 보호하려면 가입 후 [내정보 > 회원정보 수정]에서 이메일 인증을 진행해주세요.</p>
+                        <p className='text-sm mb-5 text-gray-500'>더 안전하게 계정을 보호하려면 가입 후 [내정보 &gt; 회원정보 수정]에서 이메일 인증을 진행해주세요.</p>
                     </div>
                     {/* 핸드폰 번호 입력 필드 */}
                     <div className='mb-3'>
