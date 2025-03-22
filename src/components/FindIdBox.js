@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 
 const FindIdBox = () => {
-    /* 아이디 찾기 필수 요소를 useState로 선언언 */
+    /* 아이디 찾기 필수 요소를 useState로 선언 */
     const [idForm, setIdForm] = useState({
         loginId: "",
         birthdate: '',
@@ -11,7 +11,7 @@ const FindIdBox = () => {
         inputCode: '',
         foundId: ''
     });
-    /* 필수 요소의 유효성을 useState로 선언언 */
+    /* 필수 요소의 유효성을 useState로 선언 */
     const [idValid, setIdValid] = useState({
         isPhoneValid: false,
         isVerified: false,
@@ -26,27 +26,26 @@ const FindIdBox = () => {
                     params: { phone: idForm.phone }
                 });
                 if (response.data.isSent) {
-                    setIdValid({ ...idValid, isPhoneValid: true });
-                    setIdForm({ ...idForm, verificationCode: response.data.verificationCode });
+                    setIdValid(prevState => ({ ...prevState, isPhoneValid: true }));
+                    setIdForm(prevState => ({ ...prevState, verificationCode: response.data.verificationCode }));
                 } else {
-                    setIdValid("인증번호 발송에 실패했습니다.");
+                    setIdValid(prevState => ({ ...prevState, errorMessage: "인증번호 발송에 실패했습니다." }));
                 }
             } catch (error) {
                 console.error('Error sending verification code:', error);
-                setIdValid("인증번호 발송 중 오류가 발생했습니다.");
+                setIdValid(prevState => ({ ...prevState, errorMessage: "인증번호 발송 중 오류가 발생했습니다." }));
             }
         } else {
-            setIdValid("생년월일과 휴대폰 번호를 입력해주세요.");
+            setIdValid(prevState => ({ ...prevState, errorMessage: "생년월일과 휴대폰 번호를 입력해주세요." }));
         }
     };
 
     /* 인증번호 확인 핸들러 */
     const handleVerifyCode = () => {
         if (idForm.inputCode === idForm.verificationCode) {
-            setIdValid({ ...idValid, isVerified: true });
-            setIdValid(""); // 이전 오류 메시지 지우기
+            setIdValid(prevState => ({ ...prevState, isVerified: true, errorMessage: "" }));
         } else {
-            setIdValid("인증번호가 일치하지 않습니다.");
+            setIdValid(prevState => ({ ...prevState, errorMessage: "인증번호가 일치하지 않습니다." }));
         }
     };
 
@@ -60,11 +59,11 @@ const FindIdBox = () => {
                         birthdate: idForm.birthdate
                     }
                 });
-                setIdForm({ ...idForm, foundId: response.data.id });
-                setIdValid(""); // 이전 오류 메시지 지우기
+                setIdForm(prevState => ({ ...prevState, foundId: response.data.id }));
+                setIdValid(prevState => ({ ...prevState, errorMessage: "" }));
             } catch (error) {
                 console.error('Error finding ID:', error);
-                setIdValid("아이디 찾기 중 오류가 발생했습니다.");
+                setIdValid(prevState => ({ ...prevState, errorMessage: "아이디 찾기 중 오류가 발생했습니다." }));
             }
         }
     };
