@@ -136,45 +136,57 @@ const SignupBox = () => {
         }
     }, [signupForm.email, signupForm.emailDomain]);
     
-    /* 휴대폰 번호 인증번호 받기기 */
+    /* 휴대폰 번호 인증번호 받기 */
     const handlePhoneVerification = async () => {
         if (signupForm.phone) {
             try {
-                const response = await axios.post(`/api/send-verification-code`, {
+                const response = await axios.post('http://localhost:8000/api/verify-phone', {
                     phone: signupForm.phone
                 });
-                if (response.data.isSent) {
+                if (response.data.isValid) {
                     setSignupValid({
                         ...signupValid,
-                        isPhoneValid: true
+                        isPhoneValid: true,
+                        errorMessage: ""
                     });
                     setSignupForm({
                         ...signupForm,
                         verificationCode: response.data.verificationCode
                     });
-                    setSignupValid("");
                 } else {
-                    setSignupValid("인증번호 발송에 실패했습니다.");
+                    setSignupValid({
+                        ...signupValid,
+                        errorMessage: "인증번호 발송에 실패했습니다."
+                    });
                 }
             } catch (e) {
                 console.error('Error sending verification code:', e);
-                setSignupValid("인증번호 발송 중 오류가 발생했습니다.");
+                setSignupValid({
+                    ...signupValid,
+                    errorMessage: "인증번호 발송 중 오류가 발생했습니다."
+                });
             }
         } else {
-            setSignupValid("휴대폰 번호를 입력해주세요.");
+            setSignupValid({
+                ...signupValid,
+                errorMessage: "휴대폰 번호를 입력해주세요."
+            });
         }
     };
 
-    /* 인증번호 확인인 */
+    /* 인증번호 확인 */
     const handleVerifyCode = () => {
         if (signupForm.inputCode === signupForm.verificationCode) {
             setSignupValid({
                 ...signupValid,
-                isVerified: true
+                isVerified: true,
+                errorMessage: ""
             });
-            setSignupValid(""); // Clear any previous error message
         } else {
-            setSignupValid("인증번호가 일치하지 않습니다.");
+            setSignupValid({
+                ...signupValid,
+                errorMessage: "인증번호가 일치하지 않습니다."
+            });
         }
     };
 
@@ -192,7 +204,7 @@ const SignupBox = () => {
                 phone: signupForm.phone
             });
 
-            if (response.status === 200) {
+            if (response.status === 201) {
                 alert("가입이 완료되었습니다");
             }
         } catch (e) {
@@ -270,7 +282,7 @@ const SignupBox = () => {
                                 <option value="daum.net">daum.net</option>
                             </select>
                         </div>
-                        {signupValid.isEmailValid === null ? null : signupValid.isEmailValid ? <p className="text-green-500">사용 가능한 이메일입니다.</p> : <p className="text-red-500">유효하지 않은 이메일입니다.</p>}
+                        {signupValid.isEmailValid === null ? null : signupValid.isEmailValid ? <p className="text-green-500">사용 가능한 이메일입니다.</p> : <p className="text-red-500">{signupValid.errorMessage}</p>}
                         <p className='text-sm mb-5 text-gray-500'>더 안전하게 계정을 보호하려면 가입 후 [내정보 &gt; 회원정보 수정]에서 이메일 인증을 진행해주세요.</p>
                     </div>
                     {/* 핸드폰 번호 입력 필드 */}
@@ -284,7 +296,7 @@ const SignupBox = () => {
                                 onChange={(e) => setSignupForm({ ...signupForm, phone: e.target.value })}
                                 className="w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 mb-3 mt-3"
                             />
-                            {/* 핸드폰 번호 인증번호 받기 필드드 */}
+                            {/* 핸드폰 번호 인증번호 받기 필드 */}
                             <button
                                 type="button"
                                 disabled={!signupForm.phone}
